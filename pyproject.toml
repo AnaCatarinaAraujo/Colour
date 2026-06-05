@@ -1,0 +1,24 @@
+[project]
+name = "colour"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Catarina Araújo"}
+]
+requires-python = ">=3.11"
+dependencies = [
+    "opencv-python (>=4.13.0.92,<5.0.0.0)",
+    "pandas (>=3.0.3,<4.0.0)",
+    "matplotlib (>=3.10.9,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project.scripts]
+analyze-colors = "colour.main:main"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"

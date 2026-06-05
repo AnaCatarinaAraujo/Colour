@@ -1,24 +1,194 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+colour.py
+images/AmbT1.13.05.26.JPG
+images/AmbT2.13.05.26.JPG
+images/AmbT3.13.05.26.JPG
+images/AmbTemp1.11.05.26.JPG
+images/AmbTemp1.2.11.05.26.JPG
+images/AmbTemp1.3.11.05.26.JPG
+images/AmbTemp2.11.05.26.JPG
+images/AmbTemp2.2.11.05.26.JPG
+images/AmbTemp2.3.11.05.26.JPG
+images/boild_1_08.04.26.CR2
+images/boild_1_08.04.26.JPG
+images/boild_2_08.04.26.CR2
+images/boild_2_08.04.26.JPG
+images/boild_3_08.04.26.CR2
+images/boild_3_08.04.26.JPG
+images/Boiled1_23.04.26.JPG
+images/Boiled1.04.05.26.JPG
+images/Boiled1.07.05.26.JPG
+images/Boiled1.16.04.26.JPG
+images/boiled1.20.04.26.JPG
+images/Boiled1.28.04.26.JPG
+images/Boiled2_23.04.26.JPG
+images/Boiled2.04.05.26.JPG
+images/Boiled2.07.05.26.JPG
+images/Boiled2.16.04.26.JPG
+images/boiled2.20.04.26.JPG
+images/Boiled2.28.04.26.JPG
+images/Boiled3_23.04.26.JPG
+images/Boiled3.04.05.26.JPG
+images/Boiled3.07.05.26.JPG
+images/Boiled3.16.04.26.JPG
+images/boiled3.20.04.26.JPG
+images/FastB1_10.04.26.JPG
+images/FastB2_10.04.26.JPG
+images/FastB3_10.04.26.JPG
+images/FastBNaked_10.04.26.JPG
+images/FastBSkin_10.04.26.JPG
+images/IMG_0444.JPG
+images/imitation2.2.25.05.26.JPG
+images/imitation2.3.25.05.26.JPG
+images/imitation3.1.25.05.26.JPG
+images/imitation3.2.25.05.26.JPG
+images/imitation3.3.25.05.26.JPG
+images/immitation2.1.25.05.26.JPG
+images/raw_1_08.04.26.CR2
+images/raw_1_08.04.26.JPG
+images/Raw_10.04.26.JPG
+images/Raw_23.04.26.JPG
+images/Raw.07.05.26.JPG
+images/Raw.28.04.26.JPG
+images/raw25.05.26.JPG
+images/RawCK_13.05.JPG
+images/SC1.05.05.26.JPG
+images/SC2.SC1.05.05.26.JPG
+images/SC3..05.05.26.JPG
+images/SkimSlow-10.04.26.JPG
+images/SkimSolar_10.04.26.JPG
+images/Slow1_10.04.26.JPG
+images/Slow1.16.04.26.JPG
+images/Slow2_10.04.26.JPG
+images/Slow2.16.04.26.JPG
+images/Slow3_10.04.26.JPG
+images/Slow3.16.04.26.JPG
+images/SnotC1.05.05.26.JPG
+images/SnotC2.05.05.26.JPG
+images/SnotC3.05.05.26.JPG
+images/solar_1_08.04.26.CR2
+images/solar_1_08.04.26.JPG
+images/solar_2_08.04.26.CR2
+images/solar_2_08.04.26.JPG
+images/solar_3_08.04.26.CR2
+images/solar_3_08.04.26.JPG
+images/Solar1_10.04.26.JPG
+images/Solar1_23.04.26.JPG
+images/Solar1.07.05.26.JPG
+images/Solar1.16.04.26.JPG
+images/solar1.20.04.26.JPG
+images/Solar2_23.04.26.JPG
+images/Solar2.07.05.26.JPG
+images/Solar2.16.04.26.JPG
+images/solar2.20.04.26.JPG
+images/Solar3_10.04.26.JPG
+images/Solar3_23.04.26.JPG
+images/Solar3.07.05.26.JPG
+images/Solar3.16.04.26.JPG
+images/solar3.20.04.26.JPG
+images/SolarWithoutSkin_10.04.26.JPG
+images/Solqr2_10.04.26.JPG
+images/WithoutSkinSlow_10.04.26.JPG
+pyproject.toml
+resultados_cor/color_by_object.csv
+resultados_cor/color_summary_by_image.csv
+resultados_cor/IMG_0444_annotated.png
+resultados_cor/IMG_0444_mask.png
+resultados_cor/IMG_0444_overlay_area_considered.png
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="pyproject.toml">
+[project]
+name = "colour"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Catarina Araújo"}
+]
+requires-python = ">=3.11"
+dependencies = [
+    "opencv-python (>=4.13.0.92,<5.0.0.0)",
+    "pandas (>=3.0.3,<4.0.0)",
+    "matplotlib (>=3.10.9,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+</file>
+
+<file path="colour.py">
 import cv2
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
-from tkinter import Tk, filedialog
+# from tkinter import Tk, filedialog
 
 
 # ============================================================
 # ESCOLHER PASTAS COM JANELA
 # ============================================================
 
-Tk().withdraw()
+# Tk().withdraw()
 
-input_folder = Path(
-    filedialog.askdirectory(title="Escolhe a pasta onde estão as imagens")
-)
+# input_folder = Path(
+#     filedialog.askdirectory(title="Escolhe a pasta onde estão as imagens")
+# )
 
-output_folder = Path(
-    filedialog.askdirectory(title="Escolhe a pasta onde queres guardar os resultados")
-)
+# output_folder = Path(
+#     filedialog.askdirectory(title="Escolhe a pasta onde queres guardar os resultados")
+# )
+
+input_folder = Path(__file__).parent / "images"
+output_folder = Path(__file__).parent / "resultados_cor"
+
+print(input_folder, output_folder)
 
 if not input_folder:
     raise ValueError("Não escolheste a pasta das imagens.")
@@ -333,20 +503,20 @@ for image_path in image_paths:
 # EXPORTAR RESULTADOS
 # ============================================================
 
-df_summary = pd.DataFrame(summary_results)
-df_objects = pd.DataFrame(object_results)
+# df_summary = pd.DataFrame(summary_results)
+# df_objects = pd.DataFrame(object_results)
 
-df_summary.to_csv(
-    output_folder / "color_summary_by_image.csv",
-    index=False,
-    encoding="utf-8-sig"
-)
+# df_summary.to_csv(
+#     output_folder / "color_summary_by_image.csv",
+#     index=False,
+#     encoding="utf-8-sig"
+# )
 
-df_objects.to_csv(
-    output_folder / "color_by_object.csv",
-    index=False,
-    encoding="utf-8-sig"
-)
+# df_objects.to_csv(
+#     output_folder / "color_by_object.csv",
+#     index=False,
+#     encoding="utf-8-sig"
+# )
 
 
 print("\n=========================================")
@@ -354,3 +524,20 @@ print("Análise concluída.")
 print(f"Resultados guardados em: {output_folder}")
 print("Número de imagens analisadas:", len(summary_results))
 print("Número de objetos/grãos analisados:", len(object_results))
+</file>
+
+<file path="resultados_cor/color_by_object.csv">
+R_mean,G_mean,B_mean,H_mean_deg,S_mean,V_mean,L_star,a_star,b_star,C_star,h_deg,image,object_id,area_pixels,x_centroid,y_centroid
+152.62525584576292,123.02768231076372,84.38475217943831,33.765685129160026,115.10698847373523,152.62526851063015,53.49787606360808,6.291976775722503,25.450657986187252,26.216883180044654,76.11362890322347,IMG_0444.JPG,1,3237302,2374.4419207722976,1754.4766533984164
+150.25707233387018,123.10350290595896,85.10844828793502,34.57867096141727,110.25635459701702,150.25707233387018,53.2884910844108,5.18815209018976,24.650365870737346,25.190423967693615,78.11445489242749,IMG_0444.JPG,2,114248,1671.6910492962677,936.8649079196135
+152.62525584576292,123.02768231076372,84.38475217943831,33.765685129160026,115.10698847373523,152.62526851063015,53.49787606360808,6.291976775722503,25.450657986187252,26.216883180044654,76.11362890322347,IMG_0444.JPG,1,3237302,2374.4419207722976,1754.4766533984164
+150.25707233387018,123.10350290595896,85.10844828793502,34.57867096141727,110.25635459701702,150.25707233387018,53.2884910844108,5.18815209018976,24.650365870737346,25.190423967693615,78.11445489242749,IMG_0444.JPG,2,114248,1671.6910492962677,936.8649079196135
+</file>
+
+<file path="resultados_cor/color_summary_by_image.csv">
+R_mean,G_mean,B_mean,H_mean_deg,S_mean,V_mean,L_star,a_star,b_star,C_star,h_deg,image,area_pixels
+152.54170774030166,123.02867884514862,84.4093965338228,33.79533455221583,114.93749388370811,152.54176711308637,53.49001371874619,6.254068975064627,25.422351436761716,26.18032336162192,76.17929808944669,IMG_0444.JPG,3351704
+152.54170774030166,123.02867884514862,84.4093965338228,33.79533455221583,114.93749388370811,152.54176711308637,53.49001371874619,6.254068975064627,25.422351436761716,26.18032336162192,76.17929808944669,IMG_0444.JPG,3351704
+</file>
+
+</files>
