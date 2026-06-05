@@ -4,14 +4,14 @@ import pandas as pd
 import cv2
 from pathlib import Path
 
-from .io import read_image_unicode, write_image_unicode
-from .vision import (
+from colour.io import read_image_unicode, write_image_unicode
+from colour.vision import (
     segment_chickpeas,
     show_segmentation_preview,
     save_overlay_image,
     create_annotated_image
 )
-from .core import extract_color_values
+from colour.core import extract_color_values
 
 IMAGE_EXTENSIONS = [
     "*.jpg", "*.jpeg", "*.png", "*.tif", "*.tiff",
@@ -20,18 +20,7 @@ IMAGE_EXTENSIONS = [
 
 def main():
     parser = argparse.ArgumentParser(description="Analyze colours of objects in images.")
-    parser.add_argument(
-        "--input-dir",
-        type=Path,
-        default=Path.cwd() / "images",
-        help="Path to the directory containing input images."
-    )
-    parser.add_argument(
-        "--output-dir",
-        type=Path,
-        default=Path.cwd() / "resultados_cor",
-        help="Path to the directory where results will be saved."
-    )
+
     parser.add_argument(
         "--min-area",
         type=int,
@@ -51,8 +40,8 @@ def main():
     
     args = parser.parse_args()
     
-    input_folder = args.input_dir
-    output_folder = args.output_dir
+    input_folder = Path.cwd() / "images"
+    output_folder = Path.cwd() / "resultados_cor"
     min_object_area = args.min_area
     preview_each_image = args.preview
     ask_acceptance = args.ask_acceptance
