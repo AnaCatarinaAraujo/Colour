@@ -1,0 +1,1 @@
+Médias na mesma coluna com letras diferentes são significativamente diferentes (ANOVA de Welch + Games-Howell, α = 0,05; unidade = fotografia). † Cozedura solar: sem réplicas independentes (fotografias do mesmo lote); DP apenas dentro do lote; não incluído nos testes estatísticos.
