@@ -7,40 +7,48 @@ Escala comum: cada foto reamostrada por f_ref/f (f_ref = 24 mm, a menor distânc
 focal entre as fotos escolhidas), assumindo a mesma distância câmara-amostra.
 Recorte: 1140 x 1140 px (após reamostragem), centrado no grão, igual em todos os painéis.
 Máscara: segment_chickpeas() (Otsu no canal V + abertura/fecho 5x5), a mesma da análise de cor.
+Contorno: exterior de cada grupo de grãos e também os buracos da máscara (cv2.RETR_CCOMP),
+para que os espaços entre grãos encostados apareçam fora do contorno.
 Sem barra de escala: as fotografias não têm uma referência de tamanho conhecida.
 
 Soaked: Raw_10.04.26.JPG
     painéis: (a) (b) (c) (original, máscara, contorno)
+    escolha: a mais próxima da média do tratamento (posição 1 de 7 por dE)
     dE* em relação à média do tratamento: 1.3 (n = 7 fotografias)
     foto: L*=48.2, a*=7.4, b*=35.7; média do tratamento: L*=47.0, a*=7.6, b*=35.9
     distância focal: 44 mm; fator de escala: 0.545
 
 Boiled: FastB2_10.04.26.JPG
     painéis: (d) (e) (f) (original, máscara, contorno)
+    escolha: a mais próxima da média do tratamento (posição 1 de 20 por dE)
     dE* em relação à média do tratamento: 0.5 (n = 20 fotografias)
     foto: L*=42.6, a*=7.5, b*=35.2; média do tratamento: L*=43.0, a*=7.8, b*=35.2
     distância focal: 46 mm; fator de escala: 0.522
 
-Sol.1: Solar2.16.04.26.JPG
+Sol.1: Solar1.16.04.26.JPG
     painéis: (g) (h) (i) (original, máscara, contorno)
-    dE* em relação à média do tratamento: 0.4 (n = 3 fotografias)
-    foto: L*=42.5, a*=6.3, b*=29.6; média do tratamento: L*=42.9, a*=6.3, b*=29.7
+    escolha: escolhida manualmente; a mais próxima da média (Solar2.16.04.26.JPG) tem pele solta por cima dos grãos (posição 3 de 3 por dE)
+    dE* em relação à média do tratamento: 0.5 (n = 3 fotografias)
+    foto: L*=43.0, a*=6.7, b*=30.1; média do tratamento: L*=42.9, a*=6.3, b*=29.7
     distância focal: 36 mm; fator de escala: 0.667
 
 Sol.6: SC2.05.05.26.JPG
     painéis: (j) (k) (l) (original, máscara, contorno)
+    escolha: a mais próxima da média do tratamento (posição 1 de 3 por dE)
     dE* em relação à média do tratamento: 0.6 (n = 3 fotografias)
     foto: L*=37.2, a*=6.7, b*=28.6; média do tratamento: L*=37.7, a*=6.9, b*=28.9
     distância focal: 32 mm; fator de escala: 0.750
 
 ImT.2: imitation2.1.25.05.26.JPG
     painéis: (m) (n) (o) (original, máscara, contorno)
+    escolha: a mais próxima da média do tratamento (posição 1 de 3 por dE)
     dE* em relação à média do tratamento: 0.4 (n = 3 fotografias)
     foto: L*=51.3, a*=7.9, b*=40.5; média do tratamento: L*=51.2, a*=7.7, b*=40.1
     distância focal: 49 mm; fator de escala: 0.490
 
 Sol.3: solar2.21.04.26.JPG
     painéis: (p) (q) (r) (original, máscara, contorno)
+    escolha: a mais próxima da média do tratamento (posição 1 de 3 por dE)
     dE* em relação à média do tratamento: 0.7 (n = 3 fotografias)
     foto: L*=46.4, a*=7.0, b*=35.6; média do tratamento: L*=45.8, a*=7.3, b*=35.2
     distância focal: 24 mm; fator de escala: 1.000
