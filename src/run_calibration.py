@@ -120,6 +120,7 @@ def summarise(df):
     tab["dE_vs_Soaked"] = np.sqrt((tab.L_star_mean - s.L_star_mean) ** 2 +
                                   (tab.a_star_mean - s.a_star_mean) ** 2 +
                                   (tab.b_star_mean - s.b_star_mean) ** 2)
+    tab["replicates"] = [replicate_type(t) for t in tab.index]
     tab.index.name = "treatment"
     return tab
 
@@ -132,7 +133,20 @@ def pretty(tab):
         out[name] = [f"{m:.1f} ± {sd:.1f}" if pd.notna(sd) else f"{m:.1f}"
                      for m, sd in zip(tab[f"{v}_mean"], tab[f"{v}_sd"])]
     out["ΔE* vs Soaked"] = tab["dE_vs_Soaked"].round(1)
+    out["DP refere-se a"] = [SD_MEANING[replicate_type(t)] for t in out.index]
     return out
+
+
+# Solar-cooking treatments have no independent replicates: their photos are
+# of the same batch, so their SD is within-batch only (no inferential tests).
+SD_MEANING = {
+    "replicas": "réplicas independentes (lotes)",
+    "sem_replicas": "fotografias do mesmo lote (sem réplicas; DP só dentro do lote)",
+}
+
+
+def replicate_type(treatment: str) -> str:
+    return "sem_replicas" if treatment.startswith("Sol.") else "replicas"
 
 
 # ---------------------------------------------------------------------------

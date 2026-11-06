@@ -1,0 +1,10 @@
+original_name,new_name,reason
+Solar1_10.04.26.JPG,imitation1.1.10.04.26.JPG,rotulado Solar por engano; é ImT.1 (imitação com temperatura)
+Solqr2_10.04.26.JPG,imitation1.2.10.04.26.JPG,rotulado Solar (com gralha 'Solqr') por engano; é ImT.1
+Solar3_10.04.26.JPG,imitation1.3.10.04.26.JPG,rotulado Solar por engano; é ImT.1
+boiled1.20.04.26.JPG,solar1.21.04.26.JPG,rotulado boiled 20/04 por engano; é cozedura solar de 21/04 (Sol.3)
+boiled2.20.04.26.JPG,solar2.21.04.26.JPG,rotulado boiled 20/04 por engano; é cozedura solar de 21/04 (Sol.3)
+boiled3.20.04.26.JPG,solar3.21.04.26.JPG,rotulado boiled 20/04 por engano; é cozedura solar de 21/04 (Sol.3)
+immitation2.1.25.05.26.JPG,imitation2.1.25.05.26.JPG,gralha 'immitation'
+SC2.SC1.05.05.26.JPG,SC2.05.05.26.JPG,gralha no nome
+SC3..05.05.26.JPG,SC3.05.05.26.JPG,gralha no nome (ponto duplo)
