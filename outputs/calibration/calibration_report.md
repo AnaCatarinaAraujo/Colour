@@ -1,0 +1,51 @@
+# Calibração de cor com cartões Pantone — relatório
+
+Gerado por `src/run_calibration.py` (branch `colour-calibration`). Os dados originais não foram alterados; tudo o que está aqui está em `outputs/calibration/`.
+
+## 1. Cartões usados
+- **32 cartões fotografados, 32 segmentados, 32 usados.** Todos têm correspondência por código com o Excel `Calibration Curve Sophia.xlsx` (colunas `L*`, `a*`, `b*`; as colunas "(Matlab)" foram ignoradas). Não há cartões sem correspondência.
+- O código **18R7 aparece duas vezes** no Excel (L\* 40,47 / 41,29); usou-se a média das duas leituras.
+- Medição: o mesmo L\*a\*b\* do script do grão (`extract_color_values`: OpenCV `BGR2LAB` em 8 bits; L\*·100/255, a\*−128, b\*−128). Segmentação: Otsu no canal V, componente mais próxima do centro (exclui outros cartões nos bordos), preenchimento de furos e erosão de 4% do lado menor do cartão (≈ 25–35 px). Imagens de verificação em `masks/` (vermelho = cartão, verde = zona medida).
+- O DP por pixel dentro de cada cartão é 0,3–1,0 unidades, exceto 08G5, 08G7 e 03G7 (DP de L\* 2–3,6), que têm uma ligeira sombra no bordo inferior.
+
+## 2. Modelos testados e validação (ΔE\*ab, CIE76; n = 32)
+
+| Modelo | Parâmetros | Ajuste: médio / máx | **LOO: médio / máx** | Sobreajuste? |
+|---|---|---|---|---|
+| Sem calibração | 0 | 14,7 / 22,5 | 14,7 / 22,5 | — |
+| (a) Linear por canal (L\*a\*b\*) | 6 | 8,8 / 15,0 | 9,4 / 16,5 | não |
+| **(b) Afim 3×3 + termo independente (L\*a\*b\*)** | 12 | **5,4 / 10,1** | **6,2 / 12,1** | **não** |
+| Afim + L\*² | 15 | 5,2 / 10,5 | 6,2 / 12,7 | sim (instável) |
+| Afim + L\*² + L\*³ | 18 | 5,0 / 10,6 | 6,3 / 13,0 | sim (instável) |
+| Polinómio completo 2.ª ordem (L\*a\*b\*) | 30 | 3,7 / 8,2 | 6,0 / 16,6 | **sim** |
+| RGB linear → XYZ, matriz 3×3 | 9 | 7,1 / 31,0 | 8,1 / 43,7 | não |
+| RGB linear → XYZ, root-polynomial | 18 | 6,7 / 15,6 | 9,9 / 50,9 | não |
+| RGB linear → XYZ, polinómio 2.ª ordem | 30 | 4,9 / 13,3 | 9,2 / 60,5 | sim |
+
+Critério de sobreajuste: erro LOO > 1,5 × erro de ajuste, **ou** a cor prevista para alguma fotografia de grão muda mais de 3 ΔE quando se retira um único cartão (`calibration_model_comparison.csv`).
+
+## 3. Modelo escolhido: afim 3×3 + termo independente em L\*a\*b\*
+
+    L*cal = 0,9281·L* + 0,0741·a* + 0,2425·b* − 7,414
+    a*cal = 0,0493·L* + 1,1865·a* + 0,0081·b* − 4,120
+    b*cal = 0,1121·L* + 0,3007·a* + 1,1389·b* − 5,213
+
+(L\*, a\*, b\* = valores medidos pelo script; coeficientes em `model_selected.json`; função `apply_calibration()` em `src/colour/calibration.py`.)
+
+**Porquê este e não o polinomial:** o polinómio de 2.ª ordem tem o menor erro LOO médio (6,0 contra 6,2), mas a diferença é desprezável e o modelo mostra sobreajuste claro: o erro sobe 61% do ajuste para o LOO, o máximo sobe para 16,6, e retirar um só cartão muda a cor prevista do grão até 6,5 ΔE. Os modelos polinomiais mais pequenos (com L\*² e L\*³) não melhoram o LOO e também são instáveis no grão. Os modelos em RGB linear falham nos azuis saturados (06B7, canal B perto de 255). O afim é o modelo com menor erro LOO entre os que são estáveis.
+
+## 4. Grão: unidade de medição e aplicação
+- **Unidade = uma fotografia** (média de todos os pixels de grão segmentados na fotografia, exatamente como em `color_summary_by_image.csv`). O desvio-padrão é entre fotografias (n−1).
+- Cada fotografia foi contada **uma vez** (o `main.py` original conta cada ficheiro duas vezes no Windows).
+- A calibração é aplicada a cada fotografia **antes** de calcular as médias. C\* e h° são calculados por fotografia a partir dos a\*, b\* calibrados. O ΔE\* vs Soaked usa as médias de L\*, a\* e b\*.
+- Correspondência ficheiro → tratamento: `src/treatment_mapping.csv` (66 fotografias, todas encontradas).
+- Tabelas: `treatment_summary_calibrated.csv`, `treatment_summary_uncalibrated.csv` e `treatment_summary.xlsx` (com folhas numéricas e a comparação de modelos). Medições por fotografia: `grain_measurements_*.csv`.
+
+## 5. Problemas encontrados
+1. **Não há cartões perto da cor do grão.** O grão medido tem L\* 39–55, a\* 6–10, b\* 23–33. O cartão mais próximo (30A7) está a 22 ΔE, e os seguintes a mais de 30. Os valores do grão ficam por isso numa zona sem cartões, onde o modelo interpola ou extrapola. Os modelos razoáveis (afim, RGB linear, root-polynomial) concordam a 3–4 ΔE nas médias por tratamento, mas o polinomial difere 11–13 ΔE (`sensitivity_vs_selected_model.csv`). **Os valores absolutos calibrados têm por isso uma incerteza de alguns ΔE; as diferenças entre tratamentos (ΔE vs Soaked) são mais robustas**: com o modelo afim mudam no máximo ≈ 1,7 unidades em relação aos valores não calibrados, e os extremos mantêm-se (Sol.6 o mais diferente do Soaked; Sol.3 e ImT.1 os mais próximos). Já a ordem dos tratamentos intermédios (ΔE 3–5) muda, por isso essas diferenças não devem ser sobreinterpretadas. Recomendação: fotografar e medir no colorímetro 5–10 cartões bege/amarelo-acastanhados (perto de L\* 45–55, a\* 5–12, b\* 25–40) e recalibrar.
+2. **Erro residual elevado (ΔE LOO ≈ 6).** A resposta da câmara não é linear em L\*: nos cartões escuros o L\* medido fica 10–20 unidades acima da referência, nos claros fica quase igual, e alguns cartões claros estão perto da saturação (R ≈ 254). Com 32 cartões, os modelos não lineares não conseguem corrigir isto sem sobreajuste. Se as fotos `.CR2` (RAW) estiverem disponíveis para todas as sessões e cartões, uma calibração a partir do RAW linear seria mais rigorosa.
+3. **Iluminante e observador do colorímetro.** O Konica Minolta CR-400 mede com observador de 2° e iluminante C ou D65 (configurável). A calibração leva diretamente para o espaço L\*a\*b\* do colorímetro, por isso os valores calibrados ficam com o iluminante que estava configurado. **Ainda falta confirmar se era C ou D65** (está no menu de configuração do aparelho ou na impressão/exportação das leituras).
+4. **Ficheiros e nomes:** o `.gitignore` do repositório contém `*` e ignora todos os ficheiros novos. Fotografias com rótulo errado e corrigidas no mapeamento: `Solar*_10.04.26` → ImT.1; `boiled*.20.04.26` → Sol.3 (21/04). Ficaram de fora: `Slow*`, `Skim*`, `*WithoutSkin*`, `FastBNaked`, `FastBSkin`, `IMG_0444`, `solar_*_08.04.26` e os `.CR2`.
+5. **Duplicados no script original:** no Windows, `main.py` analisa cada imagem duas vezes (`*.jpg` e `*.JPG` apanham os mesmos ficheiros), o que duplica o n. Este pipeline não tem esse problema. O `main.py` não foi alterado.
+6. Na fotografia `Boiled3_23.04` há uma linha clara no bordo esquerdo que entra na máscara do grão; o efeito é desprezável (< 0,1% da área). A segmentação das restantes fotografias está correta (`grain_masks/`).
+7. O `resultados_cor/color_by_object.csv` no repositório é uma tabela feita à mão e não resultado do script; seria apagado se o `main.py` voltasse a correr.
