@@ -1,0 +1,9 @@
+model,mean,max
+lab_affine,0.0,0.0
+lab_affine_L2,1.45,4.54
+lab_affine_L2_L3,1.81,6.79
+lab_linear_per_channel,8.43,9.03
+lab_poly2,11.46,13.12
+rgb_linear,2.84,3.63
+rgb_poly2,14.78,16.61
+rgb_root_poly2,3.42,4.17
