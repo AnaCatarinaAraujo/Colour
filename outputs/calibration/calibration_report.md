@@ -54,11 +54,11 @@ Critério de sobreajuste: erro LOO > 1,5 × erro de ajuste, **ou** a cor previst
 - Ficheiros: `stats/treatment_stats.xlsx` (tabelas com letras e †, Levene/Welch, Games-Howell), `stats/levene_welch.csv`, `stats/games_howell.csv`, `stats/treatment_summary_*_letters.csv`, `stats/NOTA.txt` (nota de rodapé para as tabelas).
 
 ## 4c. Figura 5: imagens representativas (`src/make_figure5.py`, saídas em `outputs/figures/`)
-- Uma fotografia por amostra (Soaked, Boiled, Sol.1, Sol.6, ImT.2, Sol.3): a de menor ΔE\*ab em relação à média do seu tratamento em L\*a\*b\* calibrado. Os nomes e os ΔE estão em `outputs/figures/Figure5_images_panels.txt`.
+- Uma fotografia por tipo de tratamento: Soaked, Boiled, Im.3 (imitação sem temperatura), ImT.2 (imitação com temperatura) e Sol.3 (cozedura solar). Em cada um, a de menor ΔE\*ab em relação à média do seu tratamento em L\*a\*b\* calibrado (a do Im.3, `AmbT3.13.05.26`, foi indicada pela autora e é também a mais próxima, ΔE 0,2). Os nomes e os ΔE estão em `outputs/figures/Figure5_images_panels.txt`.
 - **As fotografias mostradas na figura NÃO têm calibração de cor**: são imagens ilustrativas. A calibração aplica-se só aos valores numéricos L\*a\*b\*.
 - A máscara é a mesma da análise de cor (`segment_chickpeas`). Todas as imagens foram reamostradas para a mesma ampliação (ver o ponto 8 dos problemas) e recortadas com o mesmo tamanho, centradas no grão.
 - Não há barra de escala, porque nenhuma fotografia tem uma referência de tamanho conhecida.
-- **Sol.1:** a fotografia mais próxima da média (`Solar2.16.04.26`, ΔE 0,4) tem pele solta por cima dos grãos, por isso foi substituída por `Solar1.16.04.26` (ΔE 0,5). Gera-se com `python src/make_figure5.py --use Sol.1=Solar1.16.04.26.JPG --crop-size 1140`.
+- Gera-se com `python src/make_figure5.py --use Im.3=AmbT3.13.05.26.JPG --crop-size 1140` (15 painéis, (a)–(o)). Numa versão anterior entravam também Sol.1 e Sol.6; foram retiradas para simplificar a figura.
 - A coluna "Mask contour" desenha o contorno exterior e também os buracos da máscara (`cv2.RETR_CCOMP`), para que os espaços entre grãos encostados apareçam fora do contorno. Isto muda só o desenho da figura; a segmentação e os resultados ficam iguais.
 
 ## 4d. Pixels escuros incluídos pelo fecho morfológico (`src/analysis_dark_pixels.py`, saídas em `dark_pixels/`)

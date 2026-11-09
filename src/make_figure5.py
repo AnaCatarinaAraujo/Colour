@@ -31,7 +31,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from colour.io import read_image_unicode  # noqa: E402
 from colour.vision import segment_chickpeas  # noqa: E402
 
-SAMPLES = ["Soaked", "Boiled", "Sol.1", "Sol.6", "ImT.2", "Sol.3"]
+# one sample per type of treatment: soaked, boiled, imitation without
+# temperature (Im), imitation with temperature (ImT), solar cooking (Sol)
+SAMPLES = ["Soaked", "Boiled", "Im.3", "ImT.2", "Sol.3"]
 IMAGES = Path("images")
 CAL = Path("outputs/calibration/grain_measurements_calibrated.csv")
 OUT = Path("outputs/figures")
@@ -59,8 +61,9 @@ def pick_representatives(overrides=None):
         d = d.sort_values("dE_to_mean").reset_index(drop=True)
         if t in overrides:
             best = d[d.image == overrides[t]].iloc[0]
-            how = (f"escolhida manualmente; a mais próxima da média ({d.image[0]}) "
-                   "tem pele solta por cima dos grãos")
+            how = ("indicada pela autora; é também a mais próxima da média do tratamento"
+                   if best.image == d.image[0] else
+                   f"escolhida manualmente pela autora; a mais próxima da média é {d.image[0]}")
         else:
             best = d.iloc[0]
             how = "a mais próxima da média do tratamento"
@@ -192,7 +195,7 @@ def parse_args():
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--use", action="append", default=[], metavar="SAMPLE=IMAGE",
-                    help="force a photo for a sample, e.g. --use Sol.1=Solar1.16.04.26.JPG")
+                    help="force a photo for a sample, e.g. --use Im.3=AmbT3.13.05.26.JPG")
     ap.add_argument("--crop-size", type=int, default=None,
                     help="crop side in px after resampling (default: from the grain extent)")
     ap.add_argument("--layout-b", action="store_true")
