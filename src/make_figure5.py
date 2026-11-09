@@ -31,7 +31,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from colour.io import read_image_unicode  # noqa: E402
 from colour.vision import segment_chickpeas  # noqa: E402
 
-SAMPLES = ["Soaked", "Boiled", "Sol.1", "Sol.6", "ImT.2", "Sol.3"]
+# one sample per type of treatment: soaked, boiled, imitation without
+# temperature (Im), imitation with temperature (ImT), solar cooking (Sol)
+SAMPLES = ["Soaked", "Boiled", "Im.3", "ImT.2", "Sol.3"]
 IMAGES = Path("images")
 CAL = Path("outputs/calibration/grain_measurements_calibrated.csv")
 OUT = Path("outputs/figures")
@@ -47,15 +49,27 @@ def focal_length(path: Path) -> float:
     return float(Image.open(path).getexif().get_ifd(0x8769).get(0x920A))
 
 
-def pick_representatives():
+def pick_representatives(overrides=None):
+    """Closest photo to the treatment mean, unless overridden {sample: image}."""
+    overrides = overrides or {}
     c = pd.read_csv(CAL)
     rows = []
     for t in SAMPLES:
         d = c[c.treatment == t].copy()
         mean = d[["L_star", "a_star", "b_star"]].mean()
         d["dE_to_mean"] = np.linalg.norm(d[["L_star", "a_star", "b_star"]] - mean, axis=1)
-        best = d.sort_values("dE_to_mean").iloc[0]
+        d = d.sort_values("dE_to_mean").reset_index(drop=True)
+        if t in overrides:
+            best = d[d.image == overrides[t]].iloc[0]
+            how = ("indicada pela autora; é também a mais próxima da média do tratamento"
+                   if best.image == d.image[0] else
+                   f"escolhida manualmente pela autora; a mais próxima da média é {d.image[0]}")
+        else:
+            best = d.iloc[0]
+            how = "a mais próxima da média do tratamento"
+        rank = int(d.index[d.image == best.image][0]) + 1
         rows.append({"sample": t, "image": best.image, "dE_to_mean": best.dE_to_mean,
+                     "choice": how, "rank_by_dE": rank,
                      "n_photos_in_treatment": len(d),
                      "treatment_mean_Lab_calibrated": "L*={:.1f}, a*={:.1f}, b*={:.1f}".format(*mean),
                      "photo_Lab_calibrated": "L*={:.1f}, a*={:.1f}, b*={:.1f}".format(
@@ -88,8 +102,9 @@ def load(sel):
     return items, f_ref
 
 
-def crop(items):
-    size = int(np.ceil(max(it["extent"] for it in items) * MARGIN))
+def crop(items, size=None):
+    if size is None:
+        size = int(np.ceil(max(it["extent"] for it in items) * MARGIN))
     size = min(size, min(min(it["rgb"].shape[:2]) for it in items))
     for it in items:
         h, w = it["mask"].shape
@@ -99,7 +114,8 @@ def crop(items):
         it["rgb_c"] = it["rgb"][y0:y0 + size, x0:x0 + size]
         it["mask_c"] = it["mask"][y0:y0 + size, x0:x0 + size]
         ov = it["rgb_c"].copy()
-        cs, _ = cv2.findContours(it["mask_c"], cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+        # RETR_CCOMP: outer contours AND holes (gaps between touching grains)
+        cs, _ = cv2.findContours(it["mask_c"], cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
         cv2.drawContours(ov, cs, -1, CONTOUR_RGB, thickness=max(2, size // 350),
                          lineType=cv2.LINE_AA)
         it["overlay_c"] = ov
@@ -175,18 +191,33 @@ def save(fig, stem):
     plt.close(fig)
 
 
+def parse_args():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--use", action="append", default=[], metavar="SAMPLE=IMAGE",
+                    help="force a photo for a sample, e.g. --use Im.3=AmbT3.13.05.26.JPG")
+    ap.add_argument("--crop-size", type=int, default=None,
+                    help="crop side in px after resampling (default: from the grain extent)")
+    ap.add_argument("--layout-b", action="store_true")
+    a = ap.parse_args()
+    a.overrides = dict(u.split("=", 1) for u in a.use)
+    return a
+
+
 def main():
+    args = parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
-    sel = pick_representatives()
+    sel = pick_representatives(args.overrides)
     items, f_ref = load(sel)
-    size = crop(items)
+    size = crop(items, args.crop_size)
     save(layout_a(items), "Figure5_images")
-    if "--layout-b" in sys.argv:
+    if args.layout_b:
         save(layout_b(items), "Figure5_images_layoutB")
 
     info = pd.DataFrame([{k: it[k] for k in ["sample", "image", "dE_to_mean", "photo_Lab_calibrated",
                                              "treatment_mean_Lab_calibrated", "n_photos_in_treatment",
-                                             "focal_mm", "scale", "crop_xywh"]} for it in items])
+                                             "focal_mm", "scale", "crop_xywh", "choice", "rank_by_dE"]}
+                         for it in items])
     la = {it["sample"]: "({}) ({}) ({})".format(*"abcdefghijklmnopqr"[3 * i:3 * i + 3])
           for i, it in enumerate(items)}
     lines = [
@@ -199,12 +230,16 @@ def main():
         "focal entre as fotos escolhidas), assumindo a mesma distância câmara-amostra.",
         f"Recorte: {size} x {size} px (após reamostragem), centrado no grão, igual em todos os painéis.",
         "Máscara: segment_chickpeas() (Otsu no canal V + abertura/fecho 5x5), a mesma da análise de cor.",
+        "Contorno: exterior de cada grupo de grãos e também os buracos da máscara (cv2.RETR_CCOMP),",
+        "para que os espaços entre grãos encostados apareçam fora do contorno.",
         "Sem barra de escala: as fotografias não têm uma referência de tamanho conhecida.",
         "",
     ]
     for _, r in info.iterrows():
         lines += [f"{r['sample']}: {r.image}",
                   f"    painéis: {la[r['sample']]} (original, máscara, contorno)",
+                  f"    escolha: {r.choice} (posição {r.rank_by_dE} de "
+                  f"{r.n_photos_in_treatment} por dE)",
                   f"    dE* em relação à média do tratamento: {r.dE_to_mean:.1f} "
                   f"(n = {r.n_photos_in_treatment} fotografias)",
                   f"    foto: {r.photo_Lab_calibrated}; média do tratamento: {r.treatment_mean_Lab_calibrated}",
